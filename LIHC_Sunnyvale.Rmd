@@ -1,0 +1,237 @@
+---
+title: "LIHC Sunnyvale Investigation"
+author: "Haleigh Quinn"
+date: "2/4/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+
+## Demographics 
+```{r}
+library(tidyverse)
+  library(sf)
+  library(tigris)
+  library(leaflet)
+  library(censusapi)
+  library(dplyr)
+
+# Census Key: 
+Sys.setenv(CENSUS_KEY="6e3cadd908fdaf8f7d3d728f4faa99e738db811a")
+
+# Loading Contents of 1-year Data Dictionary
+acs_vars_2019_1yr <-
+  listCensusMetadata(
+    name = "2019/acs/acs1",
+    type = "variables"
+  )
+
+acs_vars_2019_5yr <-
+  listCensusMetadata(
+    name = "2019/acs/acs5",
+    type = "variables"
+  )
+
+acs_vars_2018_1yr <- 
+  listCensusMetadata(
+    name = "2018/acs/acs1",
+    type = "variables"
+  )
+
+
+saveRDS(acs_vars_2019_1yr, "acs_vars_2019_1yr.rds")
+saveRDS(acs_vars_2019_5yr, "acs_vars_2019_1yr.rds")
+saveRDS(acs_vars_2018_1yr, "acs_vars_2018_1yr.rds")
+
+
+## Evaluating the Percentage of Santa Clara/Sunnyvale Residents Under 30 living with disabilties:
+sc_sexbyagebydisab <-
+  getCensus(
+    name = "acs/acs5",
+    vintage = 2019,
+    region = "block group:*", 
+    regionin = "state:06+county:085",
+    vars = "group(B01001)"
+  ) %>%
+  mutate(
+    cbg =
+      paste0(state,county,tract,block_group)
+  ) %>% 
+  select(!c(GEO_ID,state,county,tract,block_group,NAME) & !ends_with(c("EA","MA","M"))) %>%
+  pivot_longer(
+    ends_with("E"),
+    names_to = "variable",
+    values_to = "estimate"
+  ) %>%
+  left_join(
+    acs_vars_2019_5yr %>% 
+      select(name, label), 
+    by = c("variable" = "name")
+  ) %>% 
+  select(-variable) %>% 
+  separate(
+    label,
+    into = c(NA,NA,"sex","age"),
+    sep = "!!"
+  ) %>% 
+  filter(!is.na(age))
+
+sc_youthdisab <- 
+  sc_sexbyagebydisab %>% 
+  mutate(
+    youth = 
+      ifelse(
+        age %in% c(
+          "5 to 9 years",
+          "10 to 14 years",
+          "15 to 17 years",
+          "20 years",
+          "21 years",
+          "22 to 24 years",
+          "25 to 29 years"
+        ),
+        estimate,
+        NA
+      )
+  ) %>% 
+  group_by(cbg) %>% 
+  summarize(
+    youth = sum(youth, na.rm = T),
+    total_pop = sum(estimate, na.rm = T)
+  ) %>% 
+  mutate(
+    percent_youth = youth/total_pop*100
+  ) %>% 
+  filter(!is.na(percent_youth))
+
+
+sc_blockgroups <- block_groups("CA", "Santa Clara", cb = T, progress_bar = F)
+
+youth_pal <- colorNumeric(
+  palette = "Blues",
+  domain = 
+    sc_youthdisab$percent_youth
+)
+
+leaflet() %>% 
+  addTiles() %>% 
+  addPolygons(
+    data = 
+      sc_youthdisab %>% 
+        left_join(
+          sc_blockgroups %>% select(GEOID), 
+          by = c("cbg" = "GEOID")
+        ) %>% 
+        st_as_sf() %>% 
+        st_transform(4326),
+    fillColor = ~youth_pal (percent_youth),
+    color = "white",
+    opacity = 0.5,
+    fillOpacity = 0.5,
+    weight = 1,
+    label = ~paste0(
+      round(percent_youth), 
+      "% under 30 years old"
+    ),
+    highlightOptions = highlightOptions(
+      weight = 2,
+      opacity = 1
+    )
+  ) %>% 
+  addLegend(
+    data = sc_youthdisab,
+    pal = youth_pal,
+    values = ~percent_youth,
+    title = "% of youth under 30 with disabilities"
+  )
+
+## Evaluating the Percentage of Santa Clara/Sunnyvale Residents that are BIPOC: 
+sc_race <-
+  getCensus(
+    name = "acs/acs5",
+    vintage = 2019,
+    region = "block group:*", 
+    regionin = "state:06+county:085",
+    vars = "group(B02001)"
+  ) %>%
+  mutate(
+    cbg =
+      paste0(state,county,tract,block_group)
+  ) %>% 
+  select(!c(GEO_ID,state,county,tract,block_group,NAME) & !ends_with(c("EA","MA","M"))) %>%
+  pivot_longer(
+    ends_with("E"),
+    names_to = "variable",
+    values_to = "estimate"
+  ) %>%
+  left_join(
+    acs_vars_2019_5yr %>% 
+      select(name, label), 
+    by = c("variable" = "name")
+  ) %>%
+  select(-variable)%>%
+  separate(
+    label,
+    into = c(NA,NA,"sex","race"),
+    sep = "!!"
+  ) %>% 
+  filter(!is.na(race))
+
+## Evaluating the age of Santa Clara/Sunnyvale Residents: 
+sc_sexbyage <-
+  getCensus(
+    name = "acs/acs5",
+    vintage = 2019,
+    region = "block group:*", 
+    regionin = "state:06+county:085",
+    vars = "group(B01001)"
+  ) %>%
+  mutate(
+    cbg =
+      paste0(state,county,tract,block_group)
+  ) %>% 
+  select(!c(GEO_ID,state,county,tract,block_group,NAME) & !ends_with(c("EA","MA","M"))) %>%
+  pivot_longer(
+    ends_with("E"),
+    names_to = "variable",
+    values_to = "estimate"
+  ) %>%
+  left_join(
+    acs_vars_2019_5yr %>% 
+      select(name, label), 
+    by = c("variable" = "name")
+  ) %>% 
+  select(-variable) %>% 
+  separate(
+    label,
+    into = c(NA,NA,"sex","age"),
+    sep = "!!"
+  ) %>% 
+  filter(!is.na(age))
+
+```
+## Household Income 
+## Rent Payments 

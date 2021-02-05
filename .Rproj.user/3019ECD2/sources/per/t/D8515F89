@@ -1,0 +1,32 @@
+{
+    "id": "D8515F89",
+    "path": null,
+    "project_path": null,
+    "type": "r_dataframe",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1612489072424.0,
+    "source_on_save": false,
+    "relative_order": 6,
+    "properties": {
+        "expression": "sc_sexbyagebydisab",
+        "caption": "sc_sexbyagebydisab",
+        "totalObservations": "49450",
+        "displayedObservations": "49450",
+        "variables": "4",
+        "cacheKey": "F1691D15",
+        "object": "sc_sexbyagebydisab",
+        "environment": "",
+        "contentUrl": "grid_resource/gridviewer.html?env=&obj=sc_sexbyagebydisab&cache_key=F1691D15&max_cols=50",
+        "preview": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 6875698586322087028,
+    "encoding": "",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1612489072424,
+    "read_only": false,
+    "read_only_alternatives": []
+}

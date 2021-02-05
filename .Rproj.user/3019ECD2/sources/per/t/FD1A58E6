@@ -1,0 +1,32 @@
+{
+    "id": "FD1A58E6",
+    "path": null,
+    "project_path": null,
+    "type": "r_dataframe",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1612489516609.0,
+    "source_on_save": false,
+    "relative_order": 7,
+    "properties": {
+        "expression": "sc_youthdisab",
+        "caption": "sc_youthdisab",
+        "totalObservations": 1074,
+        "displayedObservations": 1074,
+        "variables": 4,
+        "cacheKey": "4195142C",
+        "object": "sc_youthdisab",
+        "environment": "",
+        "contentUrl": "grid_resource/gridviewer.html?env=&obj=sc_youthdisab&cache_key=4195142C&max_cols=50",
+        "preview": 0
+    },
+    "folds": "",
+    "lastKnownWriteTime": 3763097462042276401,
+    "encoding": "",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1612489516609,
+    "read_only": false,
+    "read_only_alternatives": []
+}
