@@ -1,0 +1,12 @@
+"0","sc_sexbyage <-
+getCensus(
+    name = ""acs/acs5"",
+    vintage = 2019,
+    region = ""block group:*"", 
+    regionin = ""state:06+county:085"",
+    vars = ""group(B01001)""
+)
+"
+"2","Error in getCensus(name = ""acs/acs5"", vintage = 2019, region = ""block group:*"",  : 
+  could not find function ""getCensus""
+"

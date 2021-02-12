@@ -1,0 +1,32 @@
+{
+    "id": "BA0AC7CB",
+    "path": null,
+    "project_path": null,
+    "type": "r_dataframe",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1613102729135.0,
+    "source_on_save": false,
+    "relative_order": 5,
+    "properties": {
+        "expression": "sc_poverty_race",
+        "caption": "sc_poverty_race",
+        "totalObservations": 413,
+        "displayedObservations": 413,
+        "variables": 3,
+        "cacheKey": "63ACBBD6",
+        "object": "sc_poverty_race",
+        "environment": "",
+        "contentUrl": "grid_resource/gridviewer.html?env=&obj=sc_poverty_race&cache_key=63ACBBD6&max_cols=50",
+        "preview": 0
+    },
+    "folds": "",
+    "lastKnownWriteTime": 27866417834623029,
+    "encoding": "",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1613102729135,
+    "read_only": false,
+    "read_only_alternatives": []
+}
