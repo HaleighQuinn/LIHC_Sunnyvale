@@ -2,7 +2,9 @@
 title: "LIHC Sunnyvale Investigation"
 author: "Haleigh Quinn"
 date: "2/4/2021"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -443,32 +445,8 @@ elderly_pov_fig
 ```
 
 
-## Review: Geospatial Mapping 
-```{r}
-library(tigris)
-library(sf)
-library(tidyverse)
-library(mapview)
-library(censusapi)
+ 
 
-# Narrowing down census block groups within a 5 mile radius of the site: 
-projection <- "+proj=utm +zone=10 +ellps=GRS80 +datum=NAD83 +units=ft +no_defs"
-
-cbgs <- block_groups("CA","Santa Clara") %>%
-  st_transform(projection)
-
-site <- cbgs %>%
-  filter(GEOID == "060855087042") %>%
-  st_centroid() %>%
-  st_transform(projection)
-
-neighborhood_cbgs <- site %>%
-  st_buffer(26400) %>%
-  cbgs[., ]
-
-
-  filter(block_groups %in%
-  neighborhood_cbgs$GEOID)
 
 
 
