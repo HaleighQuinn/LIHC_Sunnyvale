@@ -1,0 +1,32 @@
+{
+    "id": "5C61A46F",
+    "path": null,
+    "project_path": null,
+    "type": "r_dataframe",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1613365186877.0,
+    "source_on_save": false,
+    "relative_order": 7,
+    "properties": {
+        "expression": "sc_povbyfam",
+        "caption": "sc_povbyfam",
+        "totalObservations": "10906",
+        "displayedObservations": "10906",
+        "variables": "7",
+        "cacheKey": "C4B15CAF",
+        "object": "sc_povbyfam",
+        "environment": "",
+        "contentUrl": "grid_resource/gridviewer.html?env=&obj=sc_povbyfam&cache_key=C4B15CAF&max_cols=50",
+        "preview": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 32651513917866099,
+    "encoding": "",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1613365186877,
+    "read_only": false,
+    "read_only_alternatives": []
+}
